@@ -1,0 +1,2 @@
+[gh200_final_lcb32k] lcb c=16: ok=60 err=0 TTFT p50=0.210s p99=0.939s (turn0 0.210s, later -s) TPOT p50=0.011s user=89.370 tok/s agg=1270.213 tok/s cached=-
+{"outputs": "/home/ubuntu/lambda-bench/results/gh200_final_lcb32k/lcb_c16.jsonl", "n": 60, "pass@1": 0.48333333333333334, "passed": 29, "no_code_block": 30, "missing": 0, "by_difficulty": {"easy": "12/12", "hard": "4/30", "medium": "13/18"}}

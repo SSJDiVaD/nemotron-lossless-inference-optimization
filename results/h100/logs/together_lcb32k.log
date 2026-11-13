@@ -1,0 +1,2 @@
+[together_lcb32k] lcb c=16: ok=60 err=0 TTFT p50=0.525s p99=2.041s (turn0 0.525s, later -s) TPOT p50=0.004s user=280.996 tok/s agg=2790.048 tok/s cached=0.000
+{"outputs": "/home/ubuntu/lambda-bench/results/together_lcb32k/lcb_c16.jsonl", "n": 60, "pass@1": 0.6166666666666667, "passed": 37, "no_code_block": 21, "missing": 0, "by_difficulty": {"easy": "11/12", "hard": "10/30", "medium": "16/18"}}

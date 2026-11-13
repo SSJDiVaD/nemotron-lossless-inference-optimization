@@ -1,0 +1,3 @@
+[h100pcie_base_lcb32k] lcb c=16: ok=60 err=0 TTFT p50=0.282s p99=1.690s (turn0 0.282s, later -s) TPOT p50=0.029s user=34.969 tok/s agg=494.105 tok/s cached=-
+{"outputs": "/home/ubuntu/lambda-bench/results/h100pcie_base_lcb32k/lcb_c16.jsonl", "n": 60, "pass@1": 0.5833333333333334, "passed": 35, "no_code_block": 23, "missing": 0, "by_difficulty": {"easy": "12/12", "hard": "9/30", "medium": "14/18"}}
+BASE32K_DONE

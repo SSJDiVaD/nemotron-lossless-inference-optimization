@@ -1,0 +1,58 @@
+=== [21:49:14] lane gpu0 config 1/2: h100_sglang_radix
+[21:49:14] gpu=0 port=8000 h100_sglang_radix: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --language-only --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer
+[21:49:34] h100_sglang_radix: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix.server.log:
+/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py:71: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+[2026-11-13 21:49:30] Breakable CUDA graph is incompatible with multimodal model; disabling prefill CUDA graph.
+[2026-11-13 21:49:30] Use marlin as MoE runner backend on SM80-SM90 for NemotronH_Omni_Reasoning_V3 modelopt_mixed
+[2026-11-13 21:49:30] Attention backend not specified. Use fa3 backend by default.
+[2026-11-13 21:49:30] --language-only is set without --encoder-urls. Encoders are expected to register dynamically via the EncoderBootstrapServer.
+[2026-11-13 21:49:30] Encoder transfer backend auto-resolved to zmq_to_scheduler for NemotronH_Omni_Reasoning_V3 at TP1.
+[2026-11-13 21:49:30] kill_process_tree called: parent_pid=45908, include_parent=False, pid=45908
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 84, in <module>
+    run_server(server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 29, in run_server
+    server_args.resolve_once()
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/server_args.py", line 277, in resolve_once
+    run_resolution_pipeline(self)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/pipeline.py", line 328, in run_resolution_pipeline
+    run_hook(handle_encoder_disaggregation, server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/resolution_hooks.py", line 139, in run_hook
+    step(server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/pd_disaggregation_hook.py", line 372, in handle_encoder_disaggregation
+    raise ValueError(
+ValueError: Model type NemotronH_Omni_Reasoning_V3 is not supported for encoder disaggregation. Supported architectures: Qwen2VL, Qwen3VL, Qwen3.5, InternS2, Qwen2Audio, Qwen2.5Omni, Dots3-Note, Kimi, MiMoV2, GLM5Next, MiniMax-M3, MuseSpark.
+=== [21:49:34] lane gpu0 config 2/2: h100_sglang_radix_mtp3
+[21:49:34] gpu=0 port=8000 h100_sglang_radix_mtp3: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --language-only --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer --speculative-algorithm EAGLE --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+[21:49:49] h100_sglang_radix_mtp3: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix_mtp3.server.log:
+/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py:71: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+[2026-11-13 21:49:44] Breakable CUDA graph is incompatible with multimodal model; disabling prefill CUDA graph.
+[2026-11-13 21:49:44] Use marlin as MoE runner backend on SM80-SM90 for NemotronH_Omni_Reasoning_V3 modelopt_mixed
+[2026-11-13 21:49:44] Attention backend not specified. Use fa3 backend by default.
+[2026-11-13 21:49:44] --language-only is set without --encoder-urls. Encoders are expected to register dynamically via the EncoderBootstrapServer.
+[2026-11-13 21:49:44] Encoder transfer backend auto-resolved to zmq_to_scheduler for NemotronH_Omni_Reasoning_V3 at TP1.
+[2026-11-13 21:49:44] kill_process_tree called: parent_pid=46052, include_parent=False, pid=46052
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 84, in <module>
+    run_server(server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 29, in run_server
+    server_args.resolve_once()
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/server_args.py", line 277, in resolve_once
+    run_resolution_pipeline(self)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/pipeline.py", line 328, in run_resolution_pipeline
+    run_hook(handle_encoder_disaggregation, server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/resolution_hooks.py", line 139, in run_hook
+    step(server_args)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/pd_disaggregation_hook.py", line 372, in handle_encoder_disaggregation
+    raise ValueError(
+ValueError: Model type NemotronH_Omni_Reasoning_V3 is not supported for encoder disaggregation. Supported architectures: Qwen2VL, Qwen3VL, Qwen3.5, InternS2, Qwen2Audio, Qwen2.5Omni, Dots3-Note, Kimi, MiMoV2, GLM5Next, MiniMax-M3, MuseSpark.
+=== [21:49:49] lane gpu0 done
+SGLANG_DONE

@@ -1,0 +1,60 @@
+=== [21:51:56] lane gpu0 config 1/2: h100_sglang_radix
+[21:51:56] gpu=0 port=8000 h100_sglang_radix: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer
+/home/ubuntu/lambda-bench/serve.sh: line 38: 47756 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:53:06] h100_sglang_radix: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix.server.log:
+    result_map[key] = fn(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/ops/quantization/per_tensor_quant_fp8.py", line 17, in per_tensor_quant_fp8_module
+    return load_jit(
+           ^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/jit/utils/compile/loader.py", line 189, in load_jit
+    library = ninja.build(spec=spec, build_dir=staging, build_file=build_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/jit/utils/compile/ninja.py", line 160, in build
+    completed = subprocess.run(
+                ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'ninja'
+
+[2026-11-13 21:53:04] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:53:04] kill_process_tree called: parent_pid=47756, include_parent=True, pid=47756
+=== [21:53:06] lane gpu0 config 2/2: h100_sglang_radix_mtp3
+[21:53:06] gpu=0 port=8000 h100_sglang_radix_mtp3: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer --speculative-algorithm EAGLE --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+/home/ubuntu/lambda-bench/serve.sh: line 38: 48320 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:54:17] h100_sglang_radix_mtp3: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix_mtp3.server.log:
+    result_map[key] = fn(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/ops/quantization/per_tensor_quant_fp8.py", line 17, in per_tensor_quant_fp8_module
+    return load_jit(
+           ^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/jit/utils/compile/loader.py", line 189, in load_jit
+    library = ninja.build(spec=spec, build_dir=staging, build_file=build_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/kernels/jit/utils/compile/ninja.py", line 160, in build
+    completed = subprocess.run(
+                ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'ninja'
+
+[2026-11-13 21:54:14] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:54:14] kill_process_tree called: parent_pid=48320, include_parent=True, pid=48320
+=== [21:54:17] lane gpu0 done
+SGLANG_DONE

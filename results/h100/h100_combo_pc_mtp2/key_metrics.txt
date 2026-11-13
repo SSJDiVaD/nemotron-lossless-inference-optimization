@@ -1,0 +1,4 @@
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 33006.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 28216.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045208e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 690688.0

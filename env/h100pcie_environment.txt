@@ -1,0 +1,16 @@
+## 
+name, memory.total [MiB], driver_version, power.limit [W]
+NVIDIA H100 PCIe, 81559 MiB, 570.148.08, 350.00 W
+| NVIDIA-SMI 570.148.08             Driver Version: 570.148.08     CUDA Version: 12.8     |
+x86_64
+OS: Ubuntu 22.04.5 LTS
+CPU cores: 26  RAM: 221 GiB
+
+cuda-compat installed: yes
+
+vllm 0.33.0
+torch 2.14.0+cu130 cuda 13.0
+flashinfer 0.7.2.post1
+
+model: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4
+model revision (commit): 3acb09951cff50cda7be0200ebbad2c15a3e63ba

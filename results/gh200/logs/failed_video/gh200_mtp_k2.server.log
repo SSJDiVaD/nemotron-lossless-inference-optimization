@@ -1,0 +1,15 @@
+[19:45:37] gpu=0 port=8000 gh200_mtp_k2: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching --speculative-config {"method":"mtp","num_speculative_tokens":2}
+W1113 19:45:39.749000 10430 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1113 19:45:39.750000 10430 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1113 19:45:39.750000 10430 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38] 
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38]        █     █     █▄   ▄█
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.33.0
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38]   █▄█▀ █     █     █     █  model   /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:38] 
+(APIServer pid=10430) INFO 11-13 19:45:43 [startup.py:96] non-default args: {'model_tag': '/home/ubuntu/models/nemotron-3.5-super-vl-nvfp4', 'model': '/home/ubuntu/models/nemotron-3.5-super-vl-nvfp4', 'trust_remote_code': True, 'max_model_len': 40960, 'served_model_name': ['nemotron'], 'reasoning_parser': 'nemotron_v3', 'gpu_memory_utilization': 0.95, 'enable_prefix_caching': False, 'limit_mm_per_prompt': {'image': 0}, 'max_num_batched_tokens': 2048, 'max_num_seqs': 32, 'speculative_config': {'method': 'mtp', 'num_speculative_tokens': 2}}
+(APIServer pid=10430) WARNING 11-13 19:45:43 [interface.py:1469] Unknown vLLM environment variable detected: VLLM_COMMON_FLAGS
+(APIServer pid=10430) WARNING 11-13 19:45:43 [interface.py:1469] Unknown vLLM environment variable detected: VLLM_VENV
+(APIServer pid=10430) INFO 11-13 19:45:44 [model.py:744] Resolved architecture: NemotronH_Omni_Reasoning_V3
+(APIServer pid=10430) INFO 11-13 19:45:44 [model.py:2170] Using max model len 40960

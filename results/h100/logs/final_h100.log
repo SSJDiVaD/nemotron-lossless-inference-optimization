@@ -1,0 +1,32 @@
+=== [20:27:15] final phase for h100
+[20:27:15] gpu=0 port=8000 h100_final_base: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --disable-prefix-caching
+[20:28:45] h100_final_base: ready on :8000 after 90s
+[h100_greedy_base_a] lcb c=8: ok=40 err=0 TTFT p50=0.356s p99=0.540s (turn0 0.356s, later -s) TPOT p50=0.013s user=74.120 tok/s agg=544.772 tok/s cached=-
+[h100_greedy_base_b] lcb c=1: ok=40 err=0 TTFT p50=0.106s p99=0.122s (turn0 0.106s, later -s) TPOT p50=0.006s user=153.999 tok/s agg=145.031 tok/s cached=-
+[h100_full_baseline] agentic c=1: ok=40 err=0 TTFT p50=1.413s p99=1.434s (turn0 1.398s, later 1.413s) TPOT p50=0.007s user=152.887 tok/s agg=82.890 tok/s cached=-
+[h100_full_baseline] agentic c=8: ok=160 err=0 TTFT p50=1.509s p99=8.732s (turn0 1.508s, later 1.509s) TPOT p50=0.047s user=21.404 tok/s agg=150.158 tok/s cached=-
+[h100_full_baseline] agentic c=32: ok=160 err=0 TTFT p50=11.548s p99=41.615s (turn0 22.558s, later 11.414s) TPOT p50=0.131s user=7.642 tok/s agg=177.812 tok/s cached=-
+[h100_full_baseline] lcb c=1: ok=8 err=0 TTFT p50=0.108s p99=0.127s (turn0 0.108s, later -s) TPOT p50=0.007s user=153.762 tok/s agg=153.088 tok/s cached=-
+[h100_full_baseline] lcb c=8: ok=24 err=0 TTFT p50=0.276s p99=0.461s (turn0 0.276s, later -s) TPOT p50=0.013s user=76.786 tok/s agg=529.308 tok/s cached=-
+./bench_suite.sh: line 35: syntax error near unexpected token `;;'
+./bench_suite.sh: line 35: ` >&2; exit 2 ;;'
+[20:46:27] gpu=0 port=8000 h100_final: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3}
+[20:48:17] h100_final: ready on :8000 after 110s
+[h100_greedy_final] lcb c=8: ok=40 err=0 TTFT p50=0.352s p99=0.620s (turn0 0.352s, later -s) TPOT p50=0.009s user=114.916 tok/s agg=799.445 tok/s cached=-
+[h100_final_lcb] lcb c=16: ok=60 err=0 TTFT p50=25.577s p99=51.968s (turn0 25.577s, later -s) TPOT p50=0.009s user=113.179 tok/s agg=1038.290 tok/s cached=-
+{"outputs": "/home/ubuntu/lambda-bench/results/h100_final_lcb/lcb_c16.jsonl", "n": 60, "pass@1": 0.4166666666666667, "passed": 25, "no_code_block": 34, "missing": 0, "by_difficulty": {"easy": "11/12", "hard": "4/30", "medium": "10/18"}}
+[h100_full_final] agentic c=1: ok=40 err=0 TTFT p50=0.117s p99=1.570s (turn0 0.647s, later 0.116s) TPOT p50=0.003s user=351.406 tok/s agg=254.915 tok/s cached=-
+[h100_full_final] agentic c=8: ok=160 err=0 TTFT p50=1.142s p99=6.819s (turn0 1.185s, later 1.142s) TPOT p50=0.019s user=52.231 tok/s agg=328.666 tok/s cached=-
+[h100_full_final] agentic c=32: ok=160 err=0 TTFT p50=21.111s p99=26.756s (turn0 15.420s, later 21.266s) TPOT p50=0.023s user=43.743 tok/s agg=292.155 tok/s cached=-
+[h100_full_final] lcb c=1: ok=8 err=0 TTFT p50=0.146s p99=0.162s (turn0 0.146s, later -s) TPOT p50=0.003s user=326.629 tok/s agg=323.839 tok/s cached=-
+[h100_full_final] lcb c=8: ok=24 err=0 TTFT p50=0.203s p99=0.513s (turn0 0.203s, later -s) TPOT p50=0.007s user=139.233 tok/s agg=997.570 tok/s cached=-
+[21:01:48] gpu=0 port=8000 h100_full_pc: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64
+[21:03:18] h100_full_pc: ready on :8000 after 90s
+[h100_full_pc] agentic c=1: ok=40 err=0 TTFT p50=0.183s p99=1.729s (turn0 0.775s, later 0.182s) TPOT p50=0.007s user=152.707 tok/s agg=126.771 tok/s cached=-
+[h100_full_pc] agentic c=8: ok=160 err=0 TTFT p50=0.301s p99=6.759s (turn0 1.046s, later 0.282s) TPOT p50=0.016s user=61.121 tok/s agg=378.342 tok/s cached=-
+[h100_full_pc] agentic c=32: ok=160 err=0 TTFT p50=1.634s p99=19.083s (turn0 12.487s, later 1.516s) TPOT p50=0.074s user=13.449 tok/s agg=371.349 tok/s cached=-
+[h100_full_pc] lcb c=1: ok=8 err=0 TTFT p50=0.140s p99=0.158s (turn0 0.140s, later -s) TPOT p50=0.007s user=153.034 tok/s agg=152.298 tok/s cached=-
+[h100_full_pc] lcb c=8: ok=24 err=0 TTFT p50=0.346s p99=0.481s (turn0 0.346s, later -s) TPOT p50=0.013s user=76.061 tok/s agg=552.354 tok/s cached=-
+{"ref": "/home/ubuntu/lambda-bench/results/h100_greedy_base_a/lcb_c8.jsonl", "cand": "/home/ubuntu/lambda-bench/results/h100_greedy_base_b/lcb_c1.jsonl", "n": 40, "identical": 36, "identical_frac": 0.9, "median_divergence_position_frac": 0.15057915057915058}
+{"ref": "/home/ubuntu/lambda-bench/results/h100_greedy_base_a/lcb_c8.jsonl", "cand": "/home/ubuntu/lambda-bench/results/h100_greedy_final/lcb_c8.jsonl", "n": 40, "identical": 36, "identical_frac": 0.9, "median_divergence_position_frac": 0.4343065693430657}
+=== [21:14:03] FINAL DONE for h100

@@ -1,0 +1,30 @@
+=== [19:42:15] lane gpu0 config 1/7: gh200_baseline_naive
+[19:42:15] gpu=0 port=8000 gh200_baseline_naive: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching
+[19:42:45] gh200_baseline_naive: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/gh200_baseline_naive.server.log:
+           ^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 193, in __init__
+    self.engine_core = EngineCoreClient.make_async_mp_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 170, in make_async_mp_client
+    return AsyncMPClient(
+           ^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 1163, in __init__
+    super().__init__(
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 699, in __init__
+    with launch_core_engines(
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-aarch64-gnu/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1393, in launch_core_engines
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1473, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== [19:42:45] lane gpu0 config 2/7: gh200_mtp_k2
+[19:42:45] gpu=0 port=8000 gh200_mtp_k2: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching --speculative-config {"method":"mtp","num_speculative_tokens":2}

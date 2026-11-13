@@ -1,0 +1,10 @@
+[21:14:10] gpu=0 port=8000 h100_greedy_baseserver: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --disable-prefix-caching
+[21:15:41] h100_greedy_baseserver: ready on :8000 after 90s
+[h100_greedy_base_a] lcb c=8: ok=40 err=0 TTFT p50=0.274s p99=0.539s (turn0 0.274s, later -s) TPOT p50=0.013s user=74.156 tok/s agg=536.664 tok/s cached=-
+[h100_greedy_base_b] lcb c=1: ok=40 err=0 TTFT p50=0.106s p99=0.124s (turn0 0.106s, later -s) TPOT p50=0.006s user=154.204 tok/s agg=145.135 tok/s cached=-
+[21:17:15] gpu=0 port=8000 h100_greedy_finalserver: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3}
+[21:19:05] h100_greedy_finalserver: ready on :8000 after 110s
+[h100_greedy_final] lcb c=8: ok=40 err=0 TTFT p50=0.299s p99=0.618s (turn0 0.299s, later -s) TPOT p50=0.009s user=111.146 tok/s agg=778.185 tok/s cached=-
+{"ref": "results/h100_greedy_base_a/lcb_c8.jsonl", "cand": "results/h100_greedy_base_b/lcb_c1.jsonl", "n": 40, "identical": 0, "identical_frac": 0.0, "median_divergence_position_frac": 0.16890380313199105}
+{"ref": "results/h100_greedy_base_a/lcb_c8.jsonl", "cand": "results/h100_greedy_final/lcb_c8.jsonl", "n": 40, "identical": 1, "identical_frac": 0.025, "median_divergence_position_frac": 0.1239356669820246}
+GREEDY_REDO_DONE

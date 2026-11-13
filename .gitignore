@@ -1,0 +1,8 @@
+# working folders (packaged into bench/ and results/ by package.sh)
+lambda-bench/
+submission/
+# raw profiler traces are large; summaries are kept
+*.pt.trace.json.gz
+__pycache__/
+*.pyc
+.env

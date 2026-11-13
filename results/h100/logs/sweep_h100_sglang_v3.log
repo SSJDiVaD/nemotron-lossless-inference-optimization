@@ -1,0 +1,60 @@
+=== [21:50:38] lane gpu0 config 1/2: h100_sglang_radix
+[21:50:38] gpu=0 port=8000 h100_sglang_radix: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer
+/home/ubuntu/lambda-bench/serve.sh: line 38: 46777 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:51:13] h100_sglang_radix: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix.server.log:
+                         ^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 488, in __init__
+    deep_gemm_wrapper.update_deep_gemm_config(gpu_id)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/layers/deep_gemm_wrapper/entrypoint.py", line 302, in update_deep_gemm_config
+    deep_gemm.set_pdl(True)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/_ops.py", line 916, in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Assertion error (/deepgemm/third-party/deep_jit/include/deep_jit/backend/cuda/backend.hpp:72): major > 12 or (major == 12 and minor >= 9): NVCC version must be at least 12.9
+C++ trace (most recent call first):
+  #0 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x12e759 deep_jit::CUDA::get_compiler_info() const at ??:0
+  #1 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x1307b3 std::_Function_handler<std::shared_ptr<deep_jit::Runtime<deep_jit::CUDA> > (), deep_gemm::init_jit(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at ??:0
+  #2 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x890de deep_jit::LazyInit<deep_jit::Runtime<deep_jit::CUDA> >::operator->() [clone .constprop.0] at ??:0
+  #3 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x89147 (anonymous namespace)::dg_set_pdl(bool) at ??:0
+  #4 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0xf1b19 c10::impl::make_boxed_from_unboxed_functor<c10::impl::detail::WrapFunctionIntoRuntimeFunctor_<void (*)(bool), void, c10::guts::typelist::typelist<bool> >, false>::call(c10::OperatorKernel*, c10::OperatorHandle const&, c10::DispatchKeySet, std::vector<c10::IValue, std::allocator<c10::IValue> >*) at ??:0
+  #5 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_cpu.so+0x6706ee7 c10::Dispatcher::callBoxed(c10::OperatorHandle const&, std::vector<c10::IValue, std::allocator<c10::IValue> >*) const [clone .isra.0] at ??:0
+  #6 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xb94ce3 torch::jit::invokeOperatorFromPython(c10::ArrayRef<std::shared_ptr<torch::jit::Operator> >, pybind11::args const&, pybind11::kwargs const&, std::optional<c10::DispatchKey>) at ??:0
+  #7 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xb952df torch::jit::_get_operation_for_overload_or_packet(c10::ArrayRef<std::shared_ptr<torch::jit::Operator> >, c10::Symbol, pybind11::args const&, pybind11::kwargs const&, bool, std::optional<c10::DispatchKey>) at ??:0
+  #8 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xa67306 pybind11::cpp_function::initialize<torch::jit::initJITBindings(_object*)::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const::{lambda(pybind11::args const&, pybind11::kwargs const&)#1}, pybind11::object, pybind11::args const&, pybind11::kwargs const&>(torch::jit::initJITBindings(_object*)::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const::{lambda(pybind11::args const&, pybind11::kwargs const&)#1}&&, pybind11::object (*)(pybind11::args const&, pybind11::kwargs const&))::{lambda(pybind11::detail::function_call&)#1}::_FUN(pybind11::detail::function_call&) at ??:0
+  #9 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0x4064f1 pybind11::cpp_function::dispatcher(_object*, _object* const*, unsigned long, _object*) at ??:0
+  #10 sglang::scheduler+0x1408a3c cfunction_vectorcall_FASTCALL_KEYWORDS at ??:0
+
+
+[2026-11-13 21:51:10] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:51:10] kill_process_tree called: parent_pid=46777, include_parent=True, pid=46777
+=== [21:51:13] lane gpu0 config 2/2: h100_sglang_radix_mtp3
+[21:51:13] gpu=0 port=8000 h100_sglang_radix_mtp3: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer --speculative-algorithm EAGLE --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+/home/ubuntu/lambda-bench/serve.sh: line 38: 47215 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:51:48] h100_sglang_radix_mtp3: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix_mtp3.server.log:
+                         ^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 488, in __init__
+    deep_gemm_wrapper.update_deep_gemm_config(gpu_id)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/layers/deep_gemm_wrapper/entrypoint.py", line 302, in update_deep_gemm_config
+    deep_gemm.set_pdl(True)
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/_ops.py", line 916, in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Assertion error (/deepgemm/third-party/deep_jit/include/deep_jit/backend/cuda/backend.hpp:72): major > 12 or (major == 12 and minor >= 9): NVCC version must be at least 12.9
+C++ trace (most recent call first):
+  #0 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x12e759 deep_jit::CUDA::get_compiler_info() const at ??:0
+  #1 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x1307b3 std::_Function_handler<std::shared_ptr<deep_jit::Runtime<deep_jit::CUDA> > (), deep_gemm::init_jit(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)::{lambda()#1}>::_M_invoke(std::_Any_data const&) at ??:0
+  #2 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x890de deep_jit::LazyInit<deep_jit::Runtime<deep_jit::CUDA> >::operator->() [clone .constprop.0] at ??:0
+  #3 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0x89147 (anonymous namespace)::dg_set_pdl(bool) at ??:0
+  #4 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/deep_gemm/_C.so+0xf1b19 c10::impl::make_boxed_from_unboxed_functor<c10::impl::detail::WrapFunctionIntoRuntimeFunctor_<void (*)(bool), void, c10::guts::typelist::typelist<bool> >, false>::call(c10::OperatorKernel*, c10::OperatorHandle const&, c10::DispatchKeySet, std::vector<c10::IValue, std::allocator<c10::IValue> >*) at ??:0
+  #5 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_cpu.so+0x6706ee7 c10::Dispatcher::callBoxed(c10::OperatorHandle const&, std::vector<c10::IValue, std::allocator<c10::IValue> >*) const [clone .isra.0] at ??:0
+  #6 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xb94ce3 torch::jit::invokeOperatorFromPython(c10::ArrayRef<std::shared_ptr<torch::jit::Operator> >, pybind11::args const&, pybind11::kwargs const&, std::optional<c10::DispatchKey>) at ??:0
+  #7 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xb952df torch::jit::_get_operation_for_overload_or_packet(c10::ArrayRef<std::shared_ptr<torch::jit::Operator> >, c10::Symbol, pybind11::args const&, pybind11::kwargs const&, bool, std::optional<c10::DispatchKey>) at ??:0
+  #8 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0xa67306 pybind11::cpp_function::initialize<torch::jit::initJITBindings(_object*)::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const::{lambda(pybind11::args const&, pybind11::kwargs const&)#1}, pybind11::object, pybind11::args const&, pybind11::kwargs const&>(torch::jit::initJITBindings(_object*)::{lambda(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)#2}::operator()(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const::{lambda(pybind11::args const&, pybind11::kwargs const&)#1}&&, pybind11::object (*)(pybind11::args const&, pybind11::kwargs const&))::{lambda(pybind11::detail::function_call&)#1}::_FUN(pybind11::detail::function_call&) at ??:0
+  #9 /home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/lib/libtorch_python.so+0x4064f1 pybind11::cpp_function::dispatcher(_object*, _object* const*, unsigned long, _object*) at ??:0
+  #10 sglang::scheduler+0x1408a3c cfunction_vectorcall_FASTCALL_KEYWORDS at ??:0
+
+
+[2026-11-13 21:51:46] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:51:46] kill_process_tree called: parent_pid=47215, include_parent=True, pid=47215
+=== [21:51:48] lane gpu0 done
+SGLANG_DONE

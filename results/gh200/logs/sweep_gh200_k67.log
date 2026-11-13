@@ -1,0 +1,16 @@
+=== [22:07:07] lane gpu0 config 1/2: gh200_best_k6
+[22:07:07] gpu=0 port=8000 gh200_best_k6: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":6} --async-scheduling --max-num-batched-tokens 8192 --max-num-seqs 64
+[22:11:23] gh200_best_k6: ready on :8000 after 255s
+[gh200_best_k6] agentic_short c=1: ok=24 err=0 TTFT p50=0.121s p99=1.433s (turn0 0.495s, later 0.119s) TPOT p50=0.002s user=420.375 tok/s agg=272.596 tok/s cached=-
+[gh200_best_k6] agentic_short c=8: ok=24 err=0 TTFT p50=0.222s p99=5.267s (turn0 3.872s, later 0.208s) TPOT p50=0.006s user=159.401 tok/s agg=562.724 tok/s cached=-
+[gh200_best_k6] lcb_short c=1: ok=8 err=0 TTFT p50=0.171s p99=0.183s (turn0 0.171s, later -s) TPOT p50=0.003s user=337.886 tok/s agg=332.297 tok/s cached=-
+[gh200_best_k6] lcb_short c=8: ok=8 err=0 TTFT p50=0.482s p99=0.483s (turn0 0.482s, later -s) TPOT p50=0.007s user=136.505 tok/s agg=980.438 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 59226.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 35047.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045136e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 846336.0
+=== [22:13:08] lane gpu0 config 2/2: gh200_best_k7
+[22:13:08] gpu=0 port=8000 gh200_best_k7: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":7} --async-scheduling --max-num-batched-tokens 8192 --max-num-seqs 64
+[22:17:18] gh200_best_k7: ready on :8000 after 250s
+[gh200_best_k7] agentic_short c=1: ok=24 err=0 TTFT p50=0.123s p99=1.435s (turn0 0.483s, later 0.122s) TPOT p50=0.002s user=413.803 tok/s agg=271.194 tok/s cached=-
+[gh200_best_k7] agentic_short c=8: ok=24 err=0 TTFT p50=0.216s p99=5.359s (turn0 3.822s, later 0.199s) TPOT p50=0.007s user=153.205 tok/s agg=572.222 tok/s cached=-

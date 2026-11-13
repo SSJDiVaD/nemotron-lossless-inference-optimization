@@ -1,0 +1,1 @@
+{"ok": true, "ttft": 0.18557172500004526, "e2e": 6.9476612560010835, "n_out": 2048, "prompt_tokens": 1046, "cached_tokens": null, "tpot": 0.0033034145241822364, "decode_tps": 302.7170803662768, "session": "arc196_b", "turn": 0, "t_start": 1794608279.0545669}

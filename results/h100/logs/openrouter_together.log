@@ -1,0 +1,9 @@
+[openrouter_together] agentic_short c=1: ok=24 err=0 TTFT p50=0.525s p99=1.386s (turn0 0.769s, later 0.445s) TPOT p50=0.002s user=600.216 tok/s agg=247.347 tok/s cached=0.818
+[openrouter_together] agentic_short c=8: ok=24 err=0 TTFT p50=0.623s p99=2.194s (turn0 1.398s, later 0.455s) TPOT p50=0.002s user=588.057 tok/s agg=1280.422 tok/s cached=0.607
+[openrouter_together] lcb_short c=1: ok=8 err=0 TTFT p50=0.536s p99=0.707s (turn0 0.536s, later -s) TPOT p50=0.002s user=556.705 tok/s agg=482.407 tok/s cached=0.000
+[openrouter_together] lcb_short c=8: ok=8 err=0 TTFT p50=0.463s p99=0.754s (turn0 0.463s, later -s) TPOT p50=0.003s user=393.285 tok/s agg=1324.087 tok/s cached=0.000
+rtt connect=0.003680s tls=0.052454s ttfb=0.065412s
+rtt connect=0.003691s tls=0.050115s ttfb=0.067530s
+rtt connect=0.003007s tls=0.051215s ttfb=0.067307s
+rtt connect=0.003111s tls=0.050325s ttfb=0.065168s
+rtt connect=0.003267s tls=0.050009s ttfb=0.067102s

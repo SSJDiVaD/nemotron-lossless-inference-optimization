@@ -1,0 +1,32 @@
+=== [21:19:30] lane gpu0 config 1/3: h100_combo_interactivity
+[21:19:30] gpu=0 port=8000 h100_combo_interactivity: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3} --performance-mode interactivity
+[21:22:50] h100_combo_interactivity: ready on :8000 after 200s
+[h100_combo_interactivity] agentic_short c=1: ok=24 err=0 TTFT p50=0.118s p99=1.690s (turn0 0.655s, later 0.117s) TPOT p50=0.003s user=365.765 tok/s agg=233.756 tok/s cached=-
+[h100_combo_interactivity] agentic_short c=8: ok=24 err=0 TTFT p50=3.237s p99=8.697s (turn0 5.637s, later 2.698s) TPOT p50=0.019s user=51.795 tok/s agg=227.220 tok/s cached=-
+[h100_combo_interactivity] lcb_short c=1: ok=8 err=0 TTFT p50=0.151s p99=0.174s (turn0 0.151s, later -s) TPOT p50=0.003s user=325.970 tok/s agg=320.578 tok/s cached=-
+[h100_combo_interactivity] lcb_short c=8: ok=8 err=0 TTFT p50=0.581s p99=0.691s (turn0 0.581s, later -s) TPOT p50=0.007s user=136.026 tok/s agg=1023.502 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 40266.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 31514.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045144e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 625408.0
+=== [21:24:56] lane gpu0 config 2/3: h100_pc_throughput
+[21:24:56] gpu=0 port=8000 h100_pc_throughput: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --performance-mode throughput
+[21:26:21] h100_pc_throughput: ready on :8000 after 85s
+[h100_pc_throughput] agentic_short c=1: ok=24 err=0 TTFT p50=0.183s p99=1.708s (turn0 0.769s, later 0.181s) TPOT p50=0.007s user=152.422 tok/s agg=120.523 tok/s cached=-
+[h100_pc_throughput] agentic_short c=8: ok=24 err=0 TTFT p50=0.329s p99=7.471s (turn0 5.809s, later 0.300s) TPOT p50=0.016s user=62.101 tok/s agg=309.874 tok/s cached=-
+[h100_pc_throughput] lcb_short c=1: ok=8 err=0 TTFT p50=0.151s p99=0.173s (turn0 0.151s, later -s) TPOT p50=0.007s user=152.885 tok/s agg=151.217 tok/s cached=-
+[h100_pc_throughput] lcb_short c=8: ok=8 err=0 TTFT p50=0.506s p99=0.528s (turn0 0.506s, later -s) TPOT p50=0.013s user=77.501 tok/s agg=586.198 tok/s cached=-
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045192e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 820224.0
+=== [21:29:53] lane gpu0 config 3/3: h100_combo_pc_mtp2
+[21:29:53] gpu=0 port=8000 h100_combo_pc_mtp2: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.97 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":2}
+[21:32:58] h100_combo_pc_mtp2: ready on :8000 after 185s
+[h100_combo_pc_mtp2] agentic_short c=1: ok=24 err=0 TTFT p50=0.121s p99=1.770s (turn0 0.666s, later 0.119s) TPOT p50=0.003s user=315.688 tok/s agg=211.720 tok/s cached=-
+[h100_combo_pc_mtp2] agentic_short c=8: ok=24 err=0 TTFT p50=1.940s p99=7.723s (turn0 5.929s, later 1.502s) TPOT p50=0.019s user=52.857 tok/s agg=266.419 tok/s cached=-
+[h100_combo_pc_mtp2] lcb_short c=1: ok=8 err=0 TTFT p50=0.155s p99=0.174s (turn0 0.155s, later -s) TPOT p50=0.003s user=297.302 tok/s agg=290.324 tok/s cached=-
+[h100_combo_pc_mtp2] lcb_short c=8: ok=8 err=0 TTFT p50=0.529s p99=0.555s (turn0 0.529s, later -s) TPOT p50=0.008s user=124.283 tok/s agg=943.167 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 33006.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 28216.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045208e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 690688.0
+=== [21:35:10] lane gpu0 done

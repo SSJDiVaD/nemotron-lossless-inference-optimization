@@ -1,0 +1,2 @@
+{"ok": true, "ttft": 0.33468291999997746, "e2e": 1.21920581500126, "n_out": 128, "prompt_tokens": 1045, "cached_tokens": null, "tpot": 0.006964747204734507, "decode_tps": 143.58022920346892, "session": "arc196_b", "turn": 0, "t_start": 1794605802.7027082}
+{"ok": true, "ttft": 0.3293633270004648, "e2e": 1.2205900270000711, "n_out": 128, "prompt_tokens": 741, "cached_tokens": null, "tpot": 0.007017533070863042, "decode_tps": 142.50021908012417, "session": "arc196_c", "turn": 0, "t_start": 1794605803.9233541}

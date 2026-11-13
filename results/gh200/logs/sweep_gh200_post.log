@@ -1,0 +1,23 @@
+=== [21:34:45] lane gpu0 config 1/2: gh200_best_throughput
+[21:34:45] gpu=0 port=8000 gh200_best_throughput: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3} --async-scheduling --max-num-batched-tokens 8192 --max-num-seqs 64 --performance-mode throughput
+[21:38:05] gh200_best_throughput: ready on :8000 after 200s
+[gh200_best_throughput] agentic_short c=1: ok=24 err=0 TTFT p50=0.118s p99=1.366s (turn0 0.577s, later 0.117s) TPOT p50=0.003s user=375.623 tok/s agg=250.942 tok/s cached=-
+[gh200_best_throughput] agentic_short c=8: ok=24 err=0 TTFT p50=0.237s p99=5.616s (turn0 3.918s, later 0.214s) TPOT p50=0.007s user=136.988 tok/s agg=524.882 tok/s cached=-
+[gh200_best_throughput] lcb_short c=1: ok=8 err=0 TTFT p50=0.164s p99=0.168s (turn0 0.164s, later -s) TPOT p50=0.003s user=332.976 tok/s agg=330.725 tok/s cached=-
+[gh200_best_throughput] lcb_short c=8: ok=8 err=0 TTFT p50=0.473s p99=0.473s (turn0 0.473s, later -s) TPOT p50=0.007s user=135.659 tok/s agg=1020.357 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 40050.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 31601.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045192e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 841728.0
+=== [21:39:53] lane gpu0 config 2/2: gh200_best_interactivity
+[21:39:53] gpu=0 port=8000 gh200_best_interactivity: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3} --async-scheduling --max-num-batched-tokens 8192 --max-num-seqs 64 --performance-mode interactivity
+[21:44:49] gh200_best_interactivity: ready on :8000 after 295s
+[gh200_best_interactivity] agentic_short c=1: ok=24 err=0 TTFT p50=0.126s p99=1.481s (turn0 0.578s, later 0.122s) TPOT p50=0.003s user=371.754 tok/s agg=248.828 tok/s cached=-
+[gh200_best_interactivity] agentic_short c=8: ok=24 err=0 TTFT p50=0.221s p99=5.627s (turn0 4.313s, later 0.214s) TPOT p50=0.007s user=138.147 tok/s agg=522.789 tok/s cached=-
+[gh200_best_interactivity] lcb_short c=1: ok=8 err=0 TTFT p50=0.170s p99=0.180s (turn0 0.170s, later -s) TPOT p50=0.003s user=341.800 tok/s agg=330.949 tok/s cached=-
+[gh200_best_interactivity] lcb_short c=8: ok=8 err=0 TTFT p50=0.484s p99=0.485s (turn0 0.484s, later -s) TPOT p50=0.007s user=133.703 tok/s agg=1021.762 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 39618.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 31141.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045112e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 841728.0
+=== [21:46:35] lane gpu0 done

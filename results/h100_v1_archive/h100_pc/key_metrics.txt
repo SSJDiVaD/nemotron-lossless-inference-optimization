@@ -1,0 +1,2 @@
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045128e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 579072.0

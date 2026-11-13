@@ -1,0 +1,60 @@
+=== [21:54:24] lane gpu0 config 1/2: h100_sglang_radix
+[21:54:24] gpu=0 port=8000 h100_sglang_radix: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer
+/home/ubuntu/lambda-bench/serve.sh: line 38: 49023 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:56:05] h100_sglang_radix: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix.server.log:
+    self.init_memory_pools()
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 1100, in init_memory_pools
+    self.init_target_memory_pool()
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 1090, in init_target_memory_pool
+    self.tp_worker.alloc_memory_pool(
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 409, in alloc_memory_pool
+    self.model_runner.alloc_memory_pool(
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 982, in alloc_memory_pool
+    result = self.kv_cache_configurator.configure(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/mem_cache/kv_cache_configurator.py", line 476, in configure
+    config = self._resolve_memory_pool_config(pre_model_load_memory)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/mem_cache/kv_cache_configurator.py", line 3182, in _resolve_memory_pool_config
+    available_bytes = self._profile_available_bytes(pre_model_load_memory)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/mem_cache/kv_cache_configurator.py", line 3040, in _profile_available_bytes
+    rest_memory = self._handle_max_mamba_cache(rest_memory)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/mem_cache/kv_cache_configurator.py", line 3393, in _handle_max_mamba_cache
+    raise RuntimeError(
+RuntimeError: Not enough GPU memory for hybrid (mamba/linear-attention) state cache. Computed max_mamba_cache_size=-15 (total_rest_memory=-4.50 GB, mamba_cache_per_req=162.34 MB). Try: (1) reduce --max-running-requests, (2) increase --mem-fraction-static, (3) reduce --speculative-num-draft-tokens, or (4) use GPUs with more memory.
+
+[2026-11-13 21:56:01] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:56:01] kill_process_tree called: parent_pid=49023, include_parent=True, pid=49023
+=== [21:56:05] lane gpu0 config 2/2: h100_sglang_radix_mtp3
+[21:56:05] gpu=0 port=8000 h100_sglang_radix_mtp3: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.90 --chunked-prefill-size 2048 --max-running-requests 32 --mamba-radix-cache-strategy extra_buffer --speculative-algorithm EAGLE --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+/home/ubuntu/lambda-bench/serve.sh: line 38: 49730 Killed                  env CUDA_VISIBLE_DEVICES="$GPU" VLLM_SERVER_DEV_MODE=1 $ENVS "${CMD[@]}" >> "$LOG" 2>&1
+[21:57:30] h100_sglang_radix_mtp3: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_sglang_radix_mtp3.server.log:
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_loader/loader.py", line 3830, in load_model
+    return super().load_model(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_loader/loader.py", line 1014, in load_model
+    model = _initialize_model(
+            ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/model_loader/loader.py", line 309, in _initialize_model
+    model = model_class(**kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/models/nemotron_h_mtp.py", line 348, in __init__
+    self.lm_head = ParallelLMHead(
+                   ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/layers/vocab_parallel_embedding.py", line 577, in __init__
+    super().__init__(
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/layers/vocab_parallel_embedding.py", line 342, in __init__
+    self.quant_method.create_weights(
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/srt/layers/quantization/unquant.py", line 557, in create_weights
+    torch.empty(
+  File "/home/ubuntu/venv-sglang/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 79.18 GiB of which 677.50 MiB is free. Including non-PyTorch memory, this process has 78.51 GiB memory in use. Of the allocated memory 77.74 GiB is allocated by PyTorch, and 107.69 MiB is reserved by PyTorch but unallocated.
+
+[2026-11-13 21:57:29] Received sigquit from a child process. It usually means the child failed.
+[2026-11-13 21:57:29] kill_process_tree called: parent_pid=49730, include_parent=True, pid=49730
+=== [21:57:30] lane gpu0 done
+SGLANG_DONE

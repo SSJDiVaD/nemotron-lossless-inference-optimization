@@ -1,0 +1,4 @@
+[19:42:45] gpu=0 port=8000 gh200_mtp_k2: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching --speculative-config {"method":"mtp","num_speculative_tokens":2}
+W1113 19:42:47.855000 7903 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1113 19:42:47.856000 7903 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1113 19:42:47.856000 7903 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead

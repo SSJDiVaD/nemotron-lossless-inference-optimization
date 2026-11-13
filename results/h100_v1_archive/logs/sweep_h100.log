@@ -1,0 +1,48 @@
+=== [19:42:04] lane gpu0 config 1/5: h100_baseline_naive
+[19:42:04] gpu=0 port=8000 h100_baseline_naive: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching
+[19:43:34] h100_baseline_naive: ready on :8000 after 90s
+[h100_baseline_naive] agentic_short c=1: ok=24 err=0 TTFT p50=1.419s p99=1.446s (turn0 1.418s, later 1.420s) TPOT p50=0.007s user=153.155 tok/s agg=82.472 tok/s cached=-
+[h100_baseline_naive] agentic_short c=8: ok=24 err=0 TTFT p50=7.315s p99=13.305s (turn0 6.114s, later 8.007s) TPOT p50=0.031s user=32.384 tok/s agg=130.697 tok/s cached=-
+[h100_baseline_naive] lcb_short c=1: ok=8 err=0 TTFT p50=0.108s p99=0.125s (turn0 0.108s, later -s) TPOT p50=0.006s user=153.867 tok/s agg=152.635 tok/s cached=-
+[h100_baseline_naive] lcb_short c=8: ok=8 err=0 TTFT p50=0.399s p99=0.471s (turn0 0.399s, later -s) TPOT p50=0.013s user=77.640 tok/s agg=611.876 tok/s cached=-
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 0.0
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 0.0
+=== [19:47:54] lane gpu0 config 2/5: h100_pc
+[19:47:54] gpu=0 port=8000 h100_pc: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64
+[19:50:25] h100_pc: ready on :8000 after 150s
+[h100_pc] agentic_short c=1: ok=24 err=0 TTFT p50=0.187s p99=1.727s (turn0 0.779s, later 0.184s) TPOT p50=0.007s user=151.767 tok/s agg=119.865 tok/s cached=-
+[h100_pc] agentic_short c=8: ok=24 err=0 TTFT p50=7.295s p99=12.365s (turn0 5.871s, later 8.573s) TPOT p50=0.022s user=44.524 tok/s agg=149.116 tok/s cached=-
+[h100_pc] lcb_short c=1: ok=8 err=0 TTFT p50=0.143s p99=0.163s (turn0 0.143s, later -s) TPOT p50=0.007s user=152.298 tok/s agg=150.781 tok/s cached=-
+[h100_pc] lcb_short c=8: ok=8 err=0 TTFT p50=0.561s p99=0.630s (turn0 0.561s, later -s) TPOT p50=0.013s user=77.028 tok/s agg=603.529 tok/s cached=-
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045128e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 579072.0
+=== [19:54:18] lane gpu0 config 3/5: h100_mtp_k3
+[19:54:18] gpu=0 port=8000 h100_mtp_k3: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --disable-prefix-caching --speculative-config {"method":"mtp","num_speculative_tokens":3}
+[19:57:04] h100_mtp_k3: server DIED during startup. Tail of /home/ubuntu/lambda-bench/results/logs/h100_mtp_k3.server.log:
+           ^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 193, in __init__
+    self.engine_core = EngineCoreClient.make_async_mp_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 170, in make_async_mp_client
+    return AsyncMPClient(
+           ^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 1163, in __init__
+    super().__init__(
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 699, in __init__
+    with launch_core_engines(
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1393, in launch_core_engines
+    wait_for_engine_startup(
+  File "/home/ubuntu/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1473, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
+=== [19:57:04] lane gpu0 config 4/5: h100_combo_pc_mtp
+[19:57:04] gpu=0 port=8000 h100_combo_pc_mtp: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --limit-mm-per-prompt {"image":0} --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3}

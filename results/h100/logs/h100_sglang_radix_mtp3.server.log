@@ -1,0 +1,5 @@
+[21:59:02] gpu=0 port=8000 h100_sglang_radix_mtp3: /home/ubuntu/venv-sglang/bin/python -m sglang.launch_server --model-path /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --host 0.0.0.0 --port 8000 --trust-remote-code --context-length 65536 --context-length 40960 --mem-fraction-static 0.96 --chunked-prefill-size 2048 --max-running-requests 16 --mamba-radix-cache-strategy extra_buffer --speculative-algorithm EAGLE --speculative-num-steps 3 --speculative-eagle-topk 1 --speculative-num-draft-tokens 4
+/home/ubuntu/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py:71: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+[2026-11-13 21:59:12] Breakable CUDA graph is incompatible with multimodal model; disabling prefill CUDA graph.

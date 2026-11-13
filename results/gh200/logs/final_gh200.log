@@ -1,0 +1,23 @@
+=== [21:01:10] final phase for gh200
+[21:01:10] gpu=0 port=8000 gh200_final_base: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --disable-prefix-caching
+[21:03:15] gh200_final_base: ready on :8000 after 125s
+[gh200_greedy_base_a] lcb c=8: ok=40 err=0 TTFT p50=0.267s p99=0.536s (turn0 0.267s, later -s) TPOT p50=0.013s user=74.710 tok/s agg=541.304 tok/s cached=-
+[gh200_greedy_base_b] lcb c=1: ok=40 err=0 TTFT p50=0.112s p99=0.122s (turn0 0.112s, later -s) TPOT p50=0.006s user=161.865 tok/s agg=151.504 tok/s cached=-
+[gh200_full_baseline] agentic c=1: ok=40 err=0 TTFT p50=1.449s p99=1.467s (turn0 1.430s, later 1.450s) TPOT p50=0.006s user=160.387 tok/s agg=83.862 tok/s cached=-
+[gh200_full_baseline] agentic c=8: ok=160 err=0 TTFT p50=1.987s p99=8.924s (turn0 1.856s, later 1.987s) TPOT p50=0.046s user=21.933 tok/s agg=149.124 tok/s cached=-
+[gh200_full_baseline] agentic c=32: ok=160 err=0 TTFT p50=11.825s p99=42.565s (turn0 23.011s, later 11.695s) TPOT p50=0.134s user=7.454 tok/s agg=174.110 tok/s cached=-
+[gh200_full_baseline] lcb c=1: ok=8 err=0 TTFT p50=0.115s p99=0.128s (turn0 0.115s, later -s) TPOT p50=0.006s user=161.378 tok/s agg=160.627 tok/s cached=-
+[gh200_full_baseline] lcb c=8: ok=24 err=0 TTFT p50=0.280s p99=0.485s (turn0 0.280s, later -s) TPOT p50=0.013s user=77.529 tok/s agg=535.109 tok/s cached=-
+[21:20:48] gpu=0 port=8000 gh200_final: /home/ubuntu/venv-vllm/bin/vllm serve /home/ubuntu/models/nemotron-3.5-super-vl-nvfp4 --served-model-name nemotron --port 8000 --trust-remote-code --max-model-len 40960 --gpu-memory-utilization 0.95 --max-num-batched-tokens 2048 --max-num-seqs 32 --reasoning-parser nemotron_v3 --language-model-only --enable-prefix-caching --enable-mamba-shared-prefix-checkpoint --block-size 64 --prefix-match-unit 64 --speculative-config {"method":"mtp","num_speculative_tokens":3} --async-scheduling --max-num-batched-tokens 8192 --max-num-seqs 64
+[21:24:08] gh200_final: ready on :8000 after 200s
+[gh200_greedy_final] lcb c=8: ok=40 err=0 TTFT p50=0.237s p99=0.587s (turn0 0.237s, later -s) TPOT p50=0.009s user=113.074 tok/s agg=800.080 tok/s cached=-
+[gh200_final_lcb] lcb c=16: ok=60 err=0 TTFT p50=0.212s p99=0.818s (turn0 0.212s, later -s) TPOT p50=0.011s user=90.792 tok/s agg=1275.034 tok/s cached=-
+{"outputs": "/home/ubuntu/lambda-bench/results/gh200_final_lcb/lcb_c16.jsonl", "n": 60, "pass@1": 0.43333333333333335, "passed": 26, "no_code_block": 32, "missing": 0, "by_difficulty": {"easy": "11/12", "hard": "4/30", "medium": "11/18"}}
+[gh200_full_final] agentic c=1: ok=40 err=0 TTFT p50=0.121s p99=1.333s (turn0 0.572s, later 0.120s) TPOT p50=0.003s user=370.075 tok/s agg=271.032 tok/s cached=-
+[gh200_full_final] agentic c=8: ok=160 err=0 TTFT p50=0.199s p99=5.253s (turn0 0.968s, later 0.166s) TPOT p50=0.008s user=126.680 tok/s agg=684.850 tok/s cached=-
+[gh200_full_final] agentic c=32: ok=160 err=0 TTFT p50=2.294s p99=16.140s (turn0 10.528s, later 2.024s) TPOT p50=0.061s user=16.264 tok/s agg=434.510 tok/s cached=-
+[gh200_full_final] lcb c=1: ok=8 err=0 TTFT p50=0.161s p99=0.181s (turn0 0.161s, later -s) TPOT p50=0.003s user=340.801 tok/s agg=337.082 tok/s cached=-
+[gh200_full_final] lcb c=8: ok=24 err=0 TTFT p50=0.203s p99=0.484s (turn0 0.203s, later -s) TPOT p50=0.007s user=137.173 tok/s agg=981.122 tok/s cached=-
+{"ref": "/home/ubuntu/lambda-bench/results/gh200_greedy_base_a/lcb_c8.jsonl", "cand": "/home/ubuntu/lambda-bench/results/gh200_greedy_base_b/lcb_c1.jsonl", "n": 40, "identical": 1, "identical_frac": 0.025, "median_divergence_position_frac": 0.07839195979899498}
+{"ref": "/home/ubuntu/lambda-bench/results/gh200_greedy_base_a/lcb_c8.jsonl", "cand": "/home/ubuntu/lambda-bench/results/gh200_greedy_final/lcb_c8.jsonl", "n": 40, "identical": 0, "identical_frac": 0.0, "median_divergence_position_frac": 0.11741935483870967}
+=== [21:34:44] FINAL DONE for gh200

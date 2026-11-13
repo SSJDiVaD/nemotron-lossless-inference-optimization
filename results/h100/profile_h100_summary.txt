@@ -1,0 +1,20 @@
+trace files: 2  kernels: 275754  total GPU kernel time: 2168.8 ms
+  MoE experts (FP4 W4A16 GEMM)        1069.7 ms   49.3%
+  Mamba / SSM                           72.7 ms    3.4%
+  Attention                             39.6 ms    1.8%
+  Dense GEMM (FP8/BF16)                820.4 ms   37.8%
+  Sampling / spec-decode                 4.2 ms    0.2%
+  Norm / elementwise / other           162.1 ms    7.5%
+top kernels:
+   25.1%  void cutlass::device_kernel<vllm::cutlass_3x_gemm_sm90_fp8<cutlass::float_e4m3_t
+   11.9%  void humming<MmaOpClass, Shape<0u, 1024u, 2688u>, Shape<8u, 256u, 128u>, Shape<8
+   10.6%  void humming<MmaOpClass, Shape<0u, 2816u, 1024u>, Shape<8u, 256u, 128u>, Shape<8
+    9.1%  void humming<MmaOpClass, Shape<0u, 4096u, 5376u>, Shape<8u, 128u, 128u>, Shape<8
+    6.0%  void humming<MmaOpClass, Shape<0u, 5376u, 4096u>, Shape<8u, 128u, 128u>, Shape<8
+    3.5%  triton_poi_fused_pow_relu_0
+    3.3%  void vllm::moe::single_group_topk::detail::single_group_topk_block_kernel<float,
+    2.8%  nvjet_sm90_tst_64x8_64x16_4x1_v_bz_splitK_TNT
+    2.6%  nvjet_sm90_tst_64x8_64x16_4x1_v_badd_TNT
+    2.2%  nvjet_sm90_tss_64x8_64x16_4x1_v_bz_splitK_TNT
+    1.9%  void vllm::moe::moe_align_block_size_kernel<int>(int const*, int*, int*, int*, i
+    1.6%  triton_per_fused__to_copy_add_clamp_cutlass_scaled_mm_mean_mul_pow_reciprocal_rs
