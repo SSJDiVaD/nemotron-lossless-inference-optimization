@@ -19,7 +19,7 @@ def bars(ax, names, vals, title, unit, best_hi=True):
     ax.set_title(title, fontsize=10); ax.tick_params(labelsize=8); ax.margins(x=0.35)
 # GH200 ablation, short agent trace
 steps = [("baseline", "gh200_baseline_naive"), ("+ prefix caching", "gh200_pc"), ("+ MTP k=3 + async", "gh200_combo_pc_mtp_async"),
-         ("+ 8k chunks / 64 seqs", "gh200_combo_bigbatch"), ("… with MTP k=5", "gh200_best_k5")]
+         ("+ 8k chunks / 64 seqs", "gh200_combo_bigbatch"), ("… with MTP k=5", "gh200_best_k5"), ("… with MTP k=6", "gh200_best_k6")]
 fig, axs = plt.subplots(1, 3, figsize=(15, 3.2))
 bars(axs[0], [s for s, _ in steps], [get("gh200", l, "agentic_short", 1, "ttft_p50") for _, l in steps], "GH200 · TTFT p50, 1 user (lower is better)", "s", best_hi=False)
 bars(axs[1], [s for s, _ in steps], [get("gh200", l, "agentic_short", 1, "decode_tps_per_user_p50") for _, l in steps], "GH200 · decode tok/s per user, 1 user", " tok/s")

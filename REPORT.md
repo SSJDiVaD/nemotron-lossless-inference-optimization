@@ -4,7 +4,7 @@
 
 - **Model:** `nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4`, a 120B-parameter MoE (12B active per token) with a hybrid Mamba-Transformer design, served with vLLM 0.33 on **one** GPU. No quantization beyond the published checkpoint.
 - **Best agent-traffic results, measured against the same GPU's baseline:**
-  - **GH200:** time-to-first-token (TTFT) **12× faster** for one user (1.45 s → 0.12 s) and **10× faster** for 8 users. Throughput **4.6×** at 8 users (149 → 685 tok/s, full trace). Decode **2.6×** per user with MTP k=5 (161 → 417 tok/s).
+  - **GH200:** time-to-first-token (TTFT) **12× faster** for one user (1.45 s → 0.12 s) and **10× faster** for 8 users. Throughput **5.1×** at 8 users (149 → 766 tok/s, full trace, MTP k=6). Decode **2.6×** per user (160 → 411 tok/s). For heavy load (32 users), k=3 keeps TTFT at 2.3 s vs 8.8 s with k=6.
   - **H100:** TTFT **12× faster** for one user, with **2.3×** faster decoding.
 - **Code generation (LiveCodeBench):** decode speed **2.1–2.2×** for one user and **1.7–1.9×** aggregate throughput, from the model's own multi-token-prediction (MTP) draft heads.
 - **What worked:** prefix caching, MTP speculative decoding, and memory configuration. Text-only mode freed 6× more KV cache on the H100 and on its own made 8-user TTFT 3.5× faster. Four kernel and compiler alternatives did *not* beat vLLM's defaults.
@@ -114,15 +114,17 @@ All H100 numbers use `--language-model-only` and 97% GPU memory utilization (see
 
 ### GH200 96 GB, full agent trace
 
-| Concurrency | Metric | Baseline | **Combined best** (prefix caching + MTP k=3 + async + 8k chunks/64 seqs) |
-|---|---|---|---|
-| 1 | TTFT p50 | 1.45 s | **0.12 s (12×)** |
-| 1 | Per-user decode | 160 tok/s | **370 tok/s (2.3×)** |
-| 8 | TTFT p50 | 1.99 s | **0.20 s (10×)** |
-| 8 | Per-user decode | 22 tok/s | **127 tok/s (5.8×)** |
-| 8 | Aggregate | 149 tok/s | **685 tok/s (4.6×)** |
-| 32 | TTFT p50 / p99 | 11.8 s / 42.6 s | **2.3 s / 16.1 s** |
-| 32 | Aggregate | 174 tok/s | **435 tok/s (2.5×)** |
+| Concurrency | Metric | Baseline | **Combined best** (prefix caching + MTP k=3 + async + 8k chunks/64 seqs) | Same with **MTP k=6** |
+|---|---|---|---|---|
+| 1 | TTFT p50 | 1.45 s | **0.12 s (12×)** | **0.12 s (12×)** |
+| 1 | Per-user decode | 160 tok/s | 370 tok/s (2.3×) | **411 tok/s (2.6×)** |
+| 8 | TTFT p50 | 1.99 s | **0.20 s (10×)** | 0.21 s (9.7×) |
+| 8 | Per-user decode | 22 tok/s | 127 tok/s (5.8×) | **142 tok/s (6.4×)** |
+| 8 | Aggregate | 149 tok/s | 685 tok/s (4.6×) | **766 tok/s (5.1×)** |
+| 32 | TTFT p50 / p99 | 11.8 s / 42.6 s | **2.3 s / 16.1 s** | 8.8 s / 18.5 s |
+| 32 | Aggregate | 174 tok/s | **435 tok/s (2.5×)** | 426 tok/s (2.4×) |
+
+**Choosing the MTP depth on the GH200:** k=6 is better up to ~8 concurrent users (+12% aggregate and per-user decode vs k=3, same TTFT). At 32 users the GPU is saturated: verifying 7 tokens per sequence queues requests, and TTFT rises from 2.3 s to 8.8 s. Use **k=6 for interactive or light multi-user traffic** and **k=3 for heavy load**.
 
 ### GH200 ablation, short agent trace, c=8 (each step added to the previous one)
 
@@ -144,6 +146,8 @@ All H100 numbers use `--language-model-only` and 97% GPU memory utilization (see
 | c=1 per-user decode | 153 tok/s | **331 tok/s (2.2×)** | 162 tok/s | **340 tok/s (2.1×)** | 557 tok/s |
 | c=8 aggregate | 591 tok/s | **1,033 tok/s (1.75×)** | 608 tok/s | **1,022 tok/s (1.7×)** | 1,324 tok/s |
 | c=1 TTFT | 0.11 s | 0.12 s | 0.12 s | 0.13 s | 0.54 s |
+
+On the **full** LiveCodeBench trace (24 problems at c=8), the GH200 combined config reaches **981 tok/s with k=3** and **1,056 tok/s with k=6 (1.97× the 535 tok/s baseline)**. Single-user code decode is about the same at k=3 and k=6 (341 vs 345 tok/s).
 
 ### Against Together (same NVFP4 checkpoint), short agent trace
 

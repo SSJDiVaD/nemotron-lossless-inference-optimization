@@ -1,0 +1,6 @@
+[gh200_full_k6] agentic c=1: ok=40 err=0 TTFT p50=0.121s p99=1.320s (turn0 0.487s, later 0.120s) TPOT p50=0.002s user=411.416 tok/s agg=292.474 tok/s cached=-
+[gh200_full_k6] agentic c=8: ok=160 err=0 TTFT p50=0.206s p99=4.798s (turn0 0.956s, later 0.196s) TPOT p50=0.007s user=141.736 tok/s agg=765.546 tok/s cached=-
+[gh200_full_k6] agentic c=32: ok=160 err=0 TTFT p50=8.828s p99=18.462s (turn0 10.546s, later 8.776s) TPOT p50=0.037s user=26.721 tok/s agg=425.838 tok/s cached=-
+[gh200_full_k6] lcb c=1: ok=8 err=0 TTFT p50=0.174s p99=0.190s (turn0 0.174s, later -s) TPOT p50=0.003s user=344.535 tok/s agg=340.883 tok/s cached=-
+[gh200_full_k6] lcb c=8: ok=24 err=0 TTFT p50=0.234s p99=0.489s (turn0 0.234s, later -s) TPOT p50=0.007s user=146.825 tok/s agg=1056.390 tok/s cached=-
+FULLK6_DONE

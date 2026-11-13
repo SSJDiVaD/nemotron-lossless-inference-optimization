@@ -14,3 +14,11 @@ vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 846336.0
 [22:17:18] gh200_best_k7: ready on :8000 after 250s
 [gh200_best_k7] agentic_short c=1: ok=24 err=0 TTFT p50=0.123s p99=1.435s (turn0 0.483s, later 0.122s) TPOT p50=0.002s user=413.803 tok/s agg=271.194 tok/s cached=-
 [gh200_best_k7] agentic_short c=8: ok=24 err=0 TTFT p50=0.216s p99=5.359s (turn0 3.822s, later 0.199s) TPOT p50=0.007s user=153.205 tok/s agg=572.222 tok/s cached=-
+[gh200_best_k7] lcb_short c=1: ok=8 err=0 TTFT p50=0.173s p99=0.186s (turn0 0.173s, later -s) TPOT p50=0.003s user=320.634 tok/s agg=316.440 tok/s cached=-
+[gh200_best_k7] lcb_short c=8: ok=8 err=0 TTFT p50=0.485s p99=0.486s (turn0 0.485s, later -s) TPOT p50=0.007s user=134.217 tok/s agg=963.883 tok/s cached=-
+vllm:spec_decode_num_draft_tokens_total{engine="0",model_name="nemotron"} 66283.0
+vllm:spec_decode_num_accepted_tokens_total{engine="0",model_name="nemotron"} 35558.0
+vllm:prefix_cache_queries_total{engine="0",model_name="nemotron"} 1.045144e+06
+vllm:prefix_cache_hits_total{engine="0",model_name="nemotron"} 848640.0
+=== [22:19:06] lane gpu0 done
+K67_DONE
