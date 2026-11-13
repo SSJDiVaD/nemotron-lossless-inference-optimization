@@ -21,7 +21,9 @@ export SGLANG_COMMON_FLAGS="--trust-remote-code --context-length 65536"
 
 # Merged into every bench request (both our lanes and Fireworks). Use it to pin thinking on/off the same way
 # for every endpoint. Check the model card for the exact chat_template_kwargs key before the clock starts.
-export BENCH_EXTRA_BODY='{"chat_template_kwargs":{"enable_thinking":true}}'
+# Respect a caller's value: an unconditional assignment here once silently dropped an OpenRouter provider pin.
+_DEFAULT_EXTRA_BODY='{"chat_template_kwargs":{"enable_thinking":true}}'
+export BENCH_EXTRA_BODY="${BENCH_EXTRA_BODY:-$_DEFAULT_EXTRA_BODY}"
 
 # Server startup timeout (first boot compiles kernels + captures CUDA graphs).
 export SERVE_TIMEOUT_S=1500

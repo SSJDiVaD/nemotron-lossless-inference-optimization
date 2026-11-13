@@ -149,6 +149,7 @@ All H100 numbers use `--language-model-only` and 97% GPU memory utilization (see
 
 On the **full** LiveCodeBench trace (24 problems at c=8), the GH200 combined config reaches **981 tok/s with k=3** and **1,056 tok/s with k=6 (1.97× the 535 tok/s baseline)**. Single-user code decode is about the same at k=3 and k=6 (341 vs 345 tok/s).
 
+<!-- provider-comparison:start -->
 ### Against Together (same NVFP4 checkpoint), short agent trace
 
 | | Together | Ours, H100 (prefix caching + MTP) | Ours, GH200 (combined) |
@@ -156,6 +157,7 @@ On the **full** LiveCodeBench trace (24 problems at c=8), the GH200 combined con
 | c=1 TTFT p50 | 0.53 s | **0.12 s** | **0.12 s** |
 | c=8 TTFT p50 | 0.62 s | 0.34 s (prefix caching only) | **0.21 s** |
 | c=1 per-user decode | **600 tok/s** | 366 tok/s | 376 tok/s |
+<!-- provider-comparison:end -->
 
 ## Optimizations that worked
 
