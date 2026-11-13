@@ -1,0 +1,41 @@
+# Independent safety net for the provider bench: every hour, delete any "provider-bench-*" dedicated endpoint older than
+# 6 hours at Fireworks/Together (a real run is capped at ~5 h). Catches anything every other teardown path missed.
+name: Provider janitor
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: "Delete provider-bench endpoints older than this many hours"
+        type: string
+        default: "6"
+      dry_run:
+        description: "Only list what would be deleted"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  janitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
+      FIREWORKS_ACCOUNT_ID: ${{ secrets.FIREWORKS_ACCOUNT_ID }}
+      TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q -U together || true
+      - name: Delete stale provider-bench endpoints
+        run: |
+          args=(janitor --max-age-hours "${{ inputs.max_age_hours || '6' }}")
+          [ "${{ inputs.dry_run }}" = "true" ] && args+=(--dry-run)
+          python3 bench/provider/endpoint.py "${args[@]}" 2>&1 | tee janitor.log
+          tail -1 janitor.log >> "$GITHUB_STEP_SUMMARY"

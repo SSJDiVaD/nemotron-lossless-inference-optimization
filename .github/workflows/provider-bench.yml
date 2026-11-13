@@ -1,0 +1,193 @@
+# Dedicated-endpoint provider comparison, runnable with your computer off.
+# Run from the Actions tab: "Provider bench" -> Run workflow. Order: discover (free) -> smoke (~15 min) -> full.
+# smoke/full CREATE A PAID DEDICATED ENDPOINT; it is deleted by the run itself AND by an independent always() teardown job.
+name: Provider bench
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "discover = list hardware shapes (free); smoke = tiny run to validate create/teardown; full = speed + 32k accuracy"
+        type: choice
+        options: [discover, smoke, full]
+        default: discover
+      provider:
+        description: "Provider (ignored for discover, which checks both)"
+        type: choice
+        options: [fireworks, together]
+        default: fireworks
+      shape:
+        description: "Hardware shape from the discover output (Fireworks shape-version name, or Together config id cr_...)"
+        type: string
+        default: ""
+      model:
+        description: "Together only: modelName from the discover output"
+        type: string
+        default: ""
+      hourly_usd:
+        description: "Endpoint price per hour (for the spend estimate in the summary)"
+        type: string
+        default: "0"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: provider-bench   # never two paid endpoints at once
+  cancel-in-progress: false
+
+env:
+  FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
+  FIREWORKS_ACCOUNT_ID: ${{ secrets.FIREWORKS_ACCOUNT_ID }}
+  TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      results_dir: ${{ steps.run.outputs.results_dir }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install client deps and provider CLIs
+        run: |
+          pip install -q httpx
+          # Together CLI (`tg`, >= 3.0) is only needed for provider=together; failure here is reported, not fatal.
+          pip install -q -U together || echo "::warning::could not install the Together CLI"
+          (command -v tg && tg --version) || echo "::warning::'tg' not on PATH - Together discover/create will be skipped"
+
+      - name: Discover hardware shapes (no spend)
+        run: |
+          python3 bench/provider/endpoint.py discover --provider all > shapes.json 2> discover.log || true
+          cat discover.log
+          {
+            echo "## Hardware shapes for Nemotron 3.5 Super VL"
+            echo '```'
+            grep -E "^\s+(fireworks|together)|shapes found" discover.log || echo "(none found - see log)"
+            echo '```'
+            echo "Pick a Hopper shape (H100/H200) and re-run with mode=smoke, provider and shape set."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload discovery output
+        uses: actions/upload-artifact@v4
+        with:
+          name: discover-${{ github.run_id }}
+          path: |
+            shapes.json
+            discover.log
+
+      - name: Refuse to spend without an explicit shape
+        if: inputs.mode != 'discover' && inputs.shape == ''
+        run: |
+          echo "::error::mode=${{ inputs.mode }} requires a 'shape' from the discover output. No endpoint was created."
+          exit 1
+
+      - name: Create dedicated endpoint (SPENDS MONEY)
+        if: inputs.mode != 'discover'
+        run: |
+          args=(--provider "${{ inputs.provider }}" --shape "${{ inputs.shape }}" --state-file endpoint_state.json)
+          [ -n "${{ inputs.model }}" ] && args+=(--model "${{ inputs.model }}")
+          python3 bench/provider/endpoint.py create "${args[@]}"
+          echo "- endpoint created: $(python3 -c "import json;s=json.load(open('endpoint_state.json'));print(s.get('model'))")" >> "$GITHUB_STEP_SUMMARY"
+
+      # Uploaded BEFORE benchmarking so the independent teardown job can always find and delete the endpoint.
+      - name: Save endpoint state for teardown
+        if: always() && inputs.mode != 'discover'
+        uses: actions/upload-artifact@v4
+        with:
+          name: endpoint-state-${{ github.run_id }}
+          path: endpoint_state.json
+          if-no-files-found: ignore
+
+      - name: Run benchmark (endpoint deleted on exit)
+        id: run
+        if: inputs.mode != 'discover'
+        env:
+          PROVIDER: ${{ inputs.provider }}
+          MODE: ${{ inputs.mode }}
+          HOURLY_USD: ${{ inputs.hourly_usd }}
+          SKIP_CREATE: "1"
+          STATE_FILE: endpoint_state.json
+          MAX_HOURS: "4"
+        run: |
+          export RESULTS="$PWD/results/provider_${PROVIDER}_$(date -u +%Y%m%dT%H%MZ)"
+          echo "results_dir=${RESULTS#$PWD/}" >> "$GITHUB_OUTPUT"
+          bash bench/provider/run_provider_bench.sh
+
+      - name: Upload results
+        if: always() && inputs.mode != 'discover'
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ github.run_id }}
+          path: results/provider_*
+          if-no-files-found: warn
+
+  teardown:
+    # Independent safety net: runs even if the bench job failed, timed out or was cancelled.
+    needs: bench
+    if: always() && inputs.mode != 'discover'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Together CLI (for together teardown)
+        if: inputs.provider == 'together'
+        run: pip install -q -U together || true
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: endpoint-state-${{ github.run_id }}
+      - name: Delete endpoint (idempotent)
+        run: |
+          if [ ! -f endpoint_state.json ]; then echo "no endpoint state: nothing was created"; exit 0; fi
+          python3 bench/provider/endpoint.py delete --state-file endpoint_state.json
+          echo "- teardown job: endpoint confirmed deleted" >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    # Commits results + comparison to a branch and opens a PR. Nothing lands on main without review.
+    needs: [bench, teardown]
+    if: success() && inputs.mode != 'discover'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: results-${{ github.run_id }}
+          path: results
+      - name: Commit results to a branch and open a PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          branch="provider-bench/${{ inputs.mode }}-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          cmp=$(ls results/provider_*/COMPARISON.md 2>/dev/null | head -1 || true)
+          if [ -n "$cmp" ] && [ "${{ inputs.mode }}" = "full" ]; then
+            # Replace the provider section of REPORT.md (between markers) with the dedicated-endpoint table.
+            python3 - "$cmp" <<'EOF'
+          import sys
+          cmp = open(sys.argv[1]).read().strip()
+          s = open("REPORT.md").read()
+          a, b = "<!-- provider-comparison:start -->", "<!-- provider-comparison:end -->"
+          i, j = s.index(a) + len(a), s.index(b)
+          note = ("\n_Replaces an earlier comparison that went through OpenRouter's default routing: its provider pin was "
+                  "silently dropped, so requests went to a mix of providers. See NOTES.md._\n\n")
+          open("REPORT.md", "w").write(s[:i] + "\n" + cmp + "\n" + note + s[j:])
+          EOF
+          fi
+          git add results REPORT.md
+          git commit -m "Provider bench (${{ inputs.mode }}): ${{ inputs.provider }} dedicated endpoint, run ${{ github.run_id }}"
+          git push -u origin "$branch"
+          body="Automated dedicated-endpoint comparison (mode=${{ inputs.mode }}, provider=${{ inputs.provider }}, shape=\`${{ inputs.shape }}\`). Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh pr create --base main --head "$branch" --title "Provider bench: ${{ inputs.provider }} (${{ inputs.mode }})" --body "$body" \
+            || echo "::warning::Could not open a PR (enable Settings -> Actions -> General -> 'Allow GitHub Actions to create and approve pull requests'). Branch pushed: $branch"

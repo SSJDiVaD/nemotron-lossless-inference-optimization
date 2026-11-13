@@ -14,7 +14,7 @@ on any endpoint, including ones we can't flush (Fireworks).
 Metrics per request: TTFT (first content OR reasoning token), e2e, output tokens (from usage when the
 server reports it), TPOT, per-user decode tok/s, cached prompt tokens (if the server reports them).
 """
-import argparse, asyncio, json, os, statistics, sys, time, uuid
+import argparse, asyncio, collections, json, os, re, statistics, sys, time, uuid
 import httpx
 
 
@@ -31,8 +31,10 @@ async def one_request(client, url, headers, body):
     rec = {"ok": False}
     t0 = time.perf_counter()
     ttft, n_chunks, text, reasoning, usage = None, 0, [], [], None
+    resp_model = resp_provider = request_id = None
     try:
         async with client.stream("POST", url, headers=headers, json=body) as r:
+            request_id = r.headers.get("x-request-id") or r.headers.get("x-together-request-id") or r.headers.get("fireworks-request-id")
             if r.status_code != 200:
                 rec["error"] = f"HTTP {r.status_code}: {(await r.aread())[:300]!r}"
                 return rec
@@ -43,6 +45,8 @@ async def one_request(client, url, headers, body):
                 if data == "[DONE]":
                     break
                 ev = json.loads(data)
+                resp_model = resp_model or ev.get("model")
+                resp_provider = resp_provider or ev.get("provider")
                 if ev.get("usage"):
                     usage = ev["usage"]
                 for ch in ev.get("choices") or []:
@@ -65,7 +69,8 @@ async def one_request(client, url, headers, body):
     rec.update(ok=ttft is not None, ttft=ttft, e2e=e2e, n_out=n_out,
                prompt_tokens=(usage or {}).get("prompt_tokens"),
                cached_tokens=((usage or {}).get("prompt_tokens_details") or {}).get("cached_tokens"),
-               text="".join(text), reasoning="".join(reasoning))
+               text="".join(text), reasoning="".join(reasoning),
+               resp_model=resp_model, resp_provider=resp_provider, request_id=request_id)
     if ttft is not None and n_out > 1:
         rec["tpot"] = (e2e - ttft) / (n_out - 1)
         rec["decode_tps"] = (n_out - 1) / (e2e - ttft) if e2e > ttft else None
@@ -74,6 +79,7 @@ async def one_request(client, url, headers, body):
     return rec
 
 
+MISMATCH = []  # expect-model violations; any => non-zero exit
 PARTIAL = None  # file handle: every finished request is appended immediately, so a cut-off run is still usable
 
 
@@ -97,6 +103,12 @@ async def run_session(sess, a, client, url, headers, nonce, sem, records):
             if not a.save_outputs:
                 rec.pop("text", None)
                 rec.pop("reasoning", None)
+            if a.expect_model and rec.get("ok"):
+                seen = f"{rec.get('resp_model') or ''} {rec.get('resp_provider') or ''}"
+                if not re.search(a.expect_model, seen):
+                    rec["ok"] = False
+                    rec["error"] = f"EXPECT_MODEL mismatch: response model/provider {seen.strip()!r} !~ {a.expect_model!r}"
+                    MISMATCH.append(rec["error"])
             records.append(rec)
             if PARTIAL:
                 PARTIAL.write(json.dumps(rec) + "\n"); PARTIAL.flush()
@@ -147,9 +159,13 @@ async def main():
     ap.add_argument("--warmup", type=int, default=2, help="tiny requests before timing (not part of the trace)")
     ap.add_argument("--save-outputs", action="store_true", help="keep generated text (needed for lcb_grade.py)")
     ap.add_argument("--timeout", type=float, default=1800)
+    ap.add_argument("--expect-model", default=os.environ.get("BENCH_EXPECT_MODEL") or None,
+                    help="regex every response's model/provider must match, else the run fails (catches mis-routing)")
     a = ap.parse_args()
 
     sessions = [json.loads(l) for l in open(a.trace)][: a.max_sessions]
+    print(f"[{a.label}] request template: model={a.model!r} base_url={a.base_url!r} extra_body={json.dumps(a.extra_body)} "
+          f"expect_model={a.expect_model!r}", file=sys.stderr)
     trace_name = os.path.splitext(os.path.basename(a.trace))[0]
     url = a.base_url.rstrip("/") + "/chat/completions"
     headers = {"Authorization": f"Bearer {os.environ[a.api_key_env]}"} if a.api_key_env else {}
@@ -173,6 +189,8 @@ async def main():
                 for r in records:
                     f.write(json.dumps(r) + "\n")
             s = summarize(records, wall, a.label, trace_name, conc)
+            served = collections.Counter(f"{r.get('resp_model')}|{r.get('resp_provider')}" for r in records if r.get("ok"))
+            s.update(served_by=dict(served), expect_model=a.expect_model)
             s.update(base_url=a.base_url, model=a.model, max_tokens=a.max_tokens, temperature=a.temperature,
                      extra_body=a.extra_body, time=time.strftime("%Y-%m-%dT%H:%M:%S"))
             with open(os.path.join(out_dir, "summary.jsonl"), "a") as f:
@@ -187,3 +205,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+    if MISMATCH:
+        print(f"FATAL: {len(MISMATCH)} responses failed --expect-model; first: {MISMATCH[0]}", file=sys.stderr)
+        sys.exit(3)

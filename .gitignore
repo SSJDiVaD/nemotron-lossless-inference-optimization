@@ -6,3 +6,6 @@ submission/
 __pycache__/
 *.pyc
 .env
+
+# personal notes (never commit)
+david_notes
